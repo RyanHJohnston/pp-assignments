@@ -1,0 +1,142 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{algorithmicx}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage[noend]{algpseudocode}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{color}
+\begin{document}
+% Begin questions    
+
+\begin{center}
+    Ryan H. Johnston, ide709\\
+    Test 1 Sample Questions Solutions
+\end{center}
+
+% \newsavebox{\mybox} % define a new savebox
+
+% \begin{lrbox}{\mybox} % start saving the contents in \mybox
+% \begin{verbatim}
+% \begin{example} % your original \begin{} \end{} section starts here
+% ...
+% \end{example}
+% \end{verbatim}
+% \end{lrbox}
+
+
+% \let\mysavedsection\mybox % create a new variable \mysavedsection and assign the contents of \mybox to it
+
+\begin{enumerate}
+
+    % Architectures
+    \item \textit{Architectures}
+        \begin{enumerate}
+            \item \textit{SIMD} is \textit{Single Instruction Multiple Data}, it runs instructions
+                sequentially and writes to multiple data sources. \textit{MIMD} is \textit{Multiple
+                Instruction Multiple Data}, it runs multiple instructions in parallel to one another
+                while writing to mulutiple data sources. The Fox servers are not a \textit{SIMD}
+                machines, but an \textit{MIMD} machines.
+            \item
+                \begin{enumerate}
+                    \item \includegraphics[width=0.8\textwidth,height=0.5\textheight]{hypercube.png}
+                    \item The self-routing schema will be represented as an algorithm:
+                        \begin{verbatim}
+src: The binary label of the source node (an n-bit binary string)
+dest: The binary label of the destination node (an n-bit binary string)
+message: The message to be routed
+
+
+function HypercubeSelfRouting(src, dest, message):
+    current_node <- src
+
+    while current_node != dest do
+        For i from 1 to n do
+            if current_node[i] != dest[i] then
+                Toggle the i-th bit of current_node (flip from 0 to 1 or 1 to 0)
+                Forward message to the neighbor node with label current_node
+                break (Exit the loop once the first differing bit is processed)
+    end while
+                        \end{verbatim}
+
+                \end{enumerate}
+            \item The solutions are listed below:
+                \begin{itemize}
+                    \item Diameter = O(log n)
+                    \item Max Degree = O(n)
+                    \item Number of Edges = O(n log n)
+                    \item Bisection Width = O(n)
+                \end{itemize}
+        \end{enumerate}
+
+        % Algorithms and Analysis
+    \item \textit{Algorithms and Analysis}
+        \begin{enumerate}
+            \item 
+                \begin{enumerate}
+                    \item Divide A[0.. n-1] into p equal chunks.
+                    \item Each processor $i$ computes the $XOR$ of its assigned chunk.
+                    \item Perform a parallel prefix operation (specifically for XOR) to combine the results of the processors. The final XOR value of the entire array will be the result of the last processor after the prefix operation.
+                \end{enumerate}
+            \item 
+                \begin{itemize}
+                    \item $T_p = O({n \over p} + \log p)$
+                    \item $W_p = O(n)$
+                    \item $S_p = {T_1 \over T_p} = { O(n) \over O({n \over p} + log p)}$
+                    \item $p \cdot T_p = p \cdot ({n \over p} + \log p) = O(n + p \log p)$
+                \end{itemize}
+            \item For the algorithm to be cost-optimal, the cost should be O(n). Given $p \leq O({n
+                \over log n})$, our cost is: $O(n + p \log p) = O\left(n + \frac{n}{\log n} \times
+                \log\left(\frac{n}{\log n}\right)\right) = O(n)$
+            \item Using \textit{Exclusive Read Exclusive Write} (\textit{EREW}). Multiple read
+                accesses to a memory location are allowed, but multiple write accesses to a memory
+                location are serialized. 
+        \end{enumerate}
+
+        % Programming
+    \item \textit{Programming}
+        \begin{enumerate}
+            \item
+                \lstset{
+                    basicstyle=\ttfamily\small,
+                    breaklines=true,
+                    language=C++,
+                    frame=single,
+                    numbers=left,
+                    numberstyle=\tiny,
+                    keywordstyle=\color{blue},
+                    commentstyle=\color{red}
+                }
+                \begin{lstlisting}
+#include <cstdio>
+#include <cstdlib>
+
+int main() {
+    
+    int i = 0;
+    int a[4] = {0,1,2,3}; 
+    int b[4] = {4,5,6,7};
+    int scalar_product = 0;
+    
+    // execute the iteration of both vectors in parallel
+    #pragma omp parallel for reduction(+: scalar_product)
+    for (i = 0; i < 4; ++i) {
+        scalar_product += a[i]*b[i]; // multipliy bits a[i]*b[i] and add it to the scalar_product
+    }
+    
+    // print out the scalar product
+    fprintf(stdout, "Final scalar_product is %d\n", scalar_product);
+    
+    return 0;
+}
+                \end{lstlisting}
+
+            \item \textbf{No solution}
+        \end{enumerate}
+\end{enumerate}
+
+
+
+
+\end{document}

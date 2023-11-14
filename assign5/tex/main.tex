@@ -1,0 +1,101 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+
+
+\begin{document}
+
+\begin{center}
+    \textbf{Homework 5}
+\end{center}
+
+% \noindent \textbf{Definitions}:
+% \begin{enumerate}
+%     \item A \textit{binary tree} of depth \( k \) has \( 2^{k+1} - 1 \) nodes.
+%     \item A \textit{2D-mesh} of size \( k \times k \) has \( k^2 \) nodes.
+% \end{enumerate}
+
+% \noindent \textbf{Goal}:
+% To prove that the binary tree of depth \( k > 4 \) cannot be embedded on a 2D-mesh with the given properties, we need to show:
+% \[ 2^{k+1} - 1 > 2k^2 + 2k + 1 \]
+
+\noindent \underline{ Problem 2.1:}\\
+\noindent \textit{Base Case}:
+For \( k = 5 \):
+
+\[ \text{LHS: } 2^{5+1} - 1 = 63 \]
+\[ \text{RHS: } 2(5^2) + 2(5) + 1 = 61 \]
+
+Clearly, \( 63 > 61 \), so the statement holds true for the base case.
+
+\noindent \textit{Inductive Hypothesis}:
+Assume the inequality holds for some arbitrary \( k = n \):
+\[ 2^{n+1} - 1 > 2n^2 + 2n + 1 \]
+
+\noindent \textit{Inductive Step}:
+For \( k = n + 1 \):
+
+Starting with the LHS:
+\[ 2^{n+2} - 1 = 2(2^{n+1}) - 1 \]
+
+Using the inductive hypothesis:
+\[ 2^{n+1} > 2n^2 + 2n + 1 \]
+
+We get:
+\[ 2(2^{n+1}) - 1 > 2(2n^2 + 2n + 1) - 1 \]
+\[ = 4n^2 + 4n \]
+
+For the RHS:
+\[ 2(n+1)^2 + 2(n+1) + 1 \]
+\[ = 2n^2 + 6n + 5 \]
+
+The inequality:
+\[ 2^{n+2} - 1 > 2(n+1)^2 + 2(n+1) + 1 \]
+is equivalent to:
+\[ 4n^2 + 4n > 2n^2 + 6n + 5 \]
+\[ \Rightarrow 2n^2 - 2n > 5 \]
+
+This is true for all \( n > 4 \).
+
+By the principle of induction, the statement \( 2^{k+1} - 1 > 2k^2 + 2k + 1 \) holds for all \( k > 4 \).
+
+Thus, a binary tree of depth \( k > 4 \) cannot be embedded on a 2D-mesh with load-1, dilation-1,
+and congestion-free properties.\\~\\
+
+
+\noindent \underline {Problem 2.2:}\\
+\noindent (a)\\
+\begin{enumerate}[label=(\roman*)]
+    \item For all-to-all broadcast, each processor sends its $m$ words to every other processor.
+        This means every processor receives $m$ words from every other processor. Given $P$
+        processors, the time is $T_{1} = P \cdot (ts + m \cdot tw)$. We're not multiplying $P-1$
+        since every processor sends its data to itself too, in all all-to-all scenario. After
+        receiving all the words, local computation to sum up the elements of the array takes $O(m)$
+        time. Therefore, $T_{total(i)} = T_{1}$
+    \item Accumulation at a single node. Each of the $P$ processors sends its $m$ words to a single
+        node: $T_{2} = (P - 1) \cdot (ts + m \cdot tw)$. With one-to-all broadcast by the root, the
+        root sends the accumulated results to all processors including itself:
+        $T_{3} = P \cdot (ts + m \cdot tw)$. Therefore, $T_{total(ii)}=  T_{2} + T{3}$.
+    \item Just like in the all-to-all broadcast, but since we're only adding numbers, every
+        processors sends its sum (1 word) to every other processor, and each processor keeps a
+        running sum: $T_{4} = P \cdot (ts + tw)$. Therefore, $T_{total(iii)} = T_{4}$.
+\end{enumerate}
+
+\noindent (b) For $ts = 100$, $tw = 1$, and $m$ is very large:\\
+\begin{enumerate}[label=(\roman*)]
+    \item $T_{total(i)} \approx P \cdot (100 + m)$
+    \item $T_{total(ii)} \approx P \cdot (100 + m) + P \cdot (100 + m)$
+    \item $T_{total(iii)} \approx P \cdot 101$
+\end{enumerate}
+For very large $m$, $T_{total(iii)}$ is the smallest since it's not dependent on $m$.\\
+
+\noindent (c) For $ts = 100$, $tw = 1$, and $m = 1$.\\
+\begin{enumerate}[label=(\roman*)]
+    \item $T_{total(i)} \approx P \cdot 101$
+    \item $T_{total(ii)} \approx P \cdot 101 + P \cdot 101$
+    \item $T_{total(iii)} \approx P \cdot 101$\\
+\end{enumerate}
+In summary: (a) whichever is better cannot be determined. (b) $T_{total(iii)}$ is better. (c) Either
+$T_{total(i)}$ or $T_{total(iii)}$ is better.\\~\\
+
+\end{document}

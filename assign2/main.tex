@@ -1,0 +1,137 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\begin{document}
+
+\begin{center}
+    \text{Assignment \#2}\\
+    \text{Ryan H. Johnston, ide709}\\
+    \textit{NOTE: All sources are at the end of the document}
+\end{center}
+
+%%% QUESTION 1 %%%
+\noindent Question \#1) \\~\\
+(10 points) Find one of the indices where maximum value occurs in an array A[1..n] of integers
+in O(1) time on a CRCW Common PRAM model. \\~\\
+
+% \begingroup
+% \obeylines
+% \input{find_max.txt}%
+% \endgroup%
+
+% \[
+% \text{for $k = 1$, $k{+}{+}$, while $k < i$}
+% \]
+
+\noindent(a) Write Pseudocode.\\~\\
+\textbf{Solution: } \text{If duplicate maximum values exist, the highest index will be the one returned.}
+\begin{algorithm}
+    \caption{Finding Index of Maximum Value}\label{euclid}
+    \begin{algorithmic}[1]
+        \Function{FindMaxValueIndex}{A}
+        \State $\textit{n} \gets \text{length of }\textit{A}$
+
+        \For $\textit{ i } \gets 0$ \textbf{to} ${n - 1}$, \textbf{in parallel}
+        \State $m[i] \gets TRUE$
+        \EndFor
+
+        \For $\textit{ i } \gets 0$ \textbf{to} ${n - 1}$ \textbf{and} $\textit{ j } \gets 0$ \textbf{to} $n - 1$, \textbf{in parallel}
+        \If $A[i]$ \textless $A[j]$
+        \State $ m[i] \gets FALSE$
+        \EndIf
+        \EndFor
+
+        \For $\textit{ i } \gets 0$ \textbf{to} ${n - 1}$, \textbf{in parallel}
+        \If $m[i] = TRUE$
+        \State $\text{max} \gets A[i]$
+        \State $\text{max\_index} \gets i$
+        \EndIf
+        \EndFor
+
+        \Return \text{max\_index}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\noindent(b) Calculate $T_{p}$, $S_{p}$, $E_{p}$, cost, and work of your algorithm. \\~\\
+\textbf{Solution: }
+\begin{itemize}
+    \item Sequential time taken, $T_{1}$ = $O(n)$, sequential asymptotic runtime
+    \item Parallel time taken, $T_{p}$ = $O(1)$, parallel asymptotic runtime
+    \item Speedup, $S_{p}$ = ${T_{1} \over T_{p}}$ = $O(n) \over O(1)$ = $O(n) \neq O(1)$
+    \item Efficiency, $E_{p}$ = $S_{p} \over p$ = ${O(n) \over O(1)} \over p$
+    \item Cost, $p T_{p}$ = $p \cdot O(1)$
+    \item Work, $T_{1} = O(n + n^{2} + n) = O(n^{2})$, total operation count across all processes
+\end{itemize}
+
+\break
+
+%%% QUESTION 2 %%%
+\noindent Question \#2)\\
+(15 points) Design an algorithm for multiplying two square matrices of size $n x $ which uses 
+$p \leq n^{3}$ processors and achieves the fastest parallel execution time of $O(log n)$. You may 
+assume EREW PRAM model.\\~\\
+
+% QUESTION 2A %
+\noindent(a) Give major steps in high level description/pseudocode to answer part (b) - that is,
+detailed pseudocode is not needed.\\~\\
+\textbf{Solution:} I cannot write pseudocode similar to the solution to problem $1a$, simply because I 
+couldn't design one and prove its correctness. Instead, there exists an algorithm called the 
+DNS algorithm (see the textbook at Ch. 8.2.3) that much smarter people designed and published. The algorithm 
+can multiply two $n$ x $n$ matrices up to $n^{3}$ processes and performs multiplication in time of 
+$O(log n)$ by using $\Omega(n3) \over \log (n)$ processes. The following is roughly-translated pseudocode for how 
+the algorithm is done.\\~\\
+\begin{enumerate}
+    \item Arrange $n^{3}$ processes in a three-dimensional $n$ x $n$ x $n$ logical array.
+    \item Each process is labeled according to their location in the array.
+    \item Each labeled process performs a single multiplication that are assigned to a single working process.
+        Mathematically, it can be written as 
+        \begin{equation}
+            P[i,j,k] = A_{i}{j} \cdot B_{k}{j}, (0 \leq i,j,k \textless n)
+        \end{equation}
+    \item Once each process performs a single multplication, as per the previous step, then the contents of 
+        \[ C_{i}{j} = \sum_{k=0}^{n-1} P[i,j,k] \]
+        Each element $C_{i}{j}$ of the product matrix is obtained by an all-to-one reduction along the $k$ axis,
+        therefore giving the resulting matrix.
+\end{enumerate}
+
+% QUESTION 2B %
+\noindent(b) For $p \leq n^{3}$ processors, calculate expressions for $T_{p}, S_{p}, E_{p}$, 
+cost and work of your algorithm as functions of $n$ and $p$ using $O$ notation.\\~\\
+\textbf{Solution: }\\~\\
+\begin{itemize}
+    \item Number of processors, $p$ = ($n$ x $n$) $\cdot$ ($n$ x $n$), $p \leq n^{3}$
+    \item Sequential time taken, $T_{1}$ = $O(n^{3})$, sequential asymptotic runtime
+    \item Parallel time taken, $T_{p}$ = $O(\log n)$, parallel asymptotic runtime
+    \item Speedup, $S_{p}$ = ${T_{1} \over T_{p}}$ = $O(n^{3}) \over O(\log n)$ = $O(n^{3}) \neq O(\log n)$
+    \item Efficiency, $E_{p}$ = $S_{p} \over p$ = ${O(n^{3}) \over O(\log n)} \over p$
+    \item Cost, $p T_{p}$ = $p \cdot O(\log n)$
+    \item Work, $T_{1} = O(n^{3} + n^{3} + n^{3}) = O(n^{3})$, total operation count across all processes
+\end{itemize}
+
+\begin{thebibliography}{9}
+    \bibitem{texbook}
+    Ananth Grama, Anshul Gupta, George Karypls, Vipin Kumar (1994), \emph{Introduction to Parallel Computing, Second Edition},
+    The Benjamin/Cummings Publishing Company, Inc. 1994, Pearson Education Limited 2003.
+
+    \bibitem{website} https://www3.nd.edu/~zxu2/acms60212-40212/Lec-07-3.pdf
+
+
+    % \bibitem{texbook}
+    % Donald E. Knuth (1986) \emph{The \TeX{} Book}, Addison-Wesley Professional.
+
+    % \bibitem{lamport94}
+    % Leslie Lamport (1994) \emph{\LaTeX: a document preparation system}, Addison
+    % Wesley, Massachusetts, 2nd ed.
+\end{thebibliography}
+
+
+\end{document}
+
+
+
+\end{}
+
+\end{}

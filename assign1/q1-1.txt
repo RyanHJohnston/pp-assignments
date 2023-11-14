@@ -1,0 +1,14 @@
+1. Frontier - Located in Oak Ridge National Lab in the United States.
+Has 8,699,904 cores 1194.00 PFlop per second with a peak PFlop per second of 1679.82.
+
+2. Supercomputer Fugaku - Located in Fujitsu RIKEN Center for Computational Science in Japan.
+Has 7,630,848 cores 442.01 PFlop per second with a peak PFlop per second of 537.21.
+
+3. LUMI - Located in HPE EuroHPC/CSC in Finland.
+Has 2,220,288 cores 309.10 PFlop per second with a peak PFlop per second of 428.70
+
+4. Leonardo - Located in Atos EuroHPC/CINECA in Italy.
+Has 1,824,768 cores 238.70 PFlops per second with a peak PFlops per second of 304.47.
+
+5. Summit - Located in Oak Ridge National Park Lab in the United States.
+Has 2,414,592 148.60 PFlops per second with a peak PFlops per second of 200.79.

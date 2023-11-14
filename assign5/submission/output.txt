@@ -1,0 +1,6 @@
+Result matrix C:
+16      16      16      16
+16      44      128     380
+16      44      128     380
+16      44      128     380
+Execution time with 4 processors: 0.000081 seconds

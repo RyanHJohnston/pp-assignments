@@ -1,0 +1,4 @@
+To run the MPI program, type the Makefile commands:
+
+make all
+make run

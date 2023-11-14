@@ -1,0 +1,9 @@
+To compile the program, type 'make all'.
+To run, type 'make run'
+To remove object files, type 'make clean'
+To see the graph, type 'python3 measure.py'
+
+The clock times for the non-threaded program is in times.txt
+The clock times for the threaded program is in thread_times.txt
+
+To get new clock times in the txt files, type 'sh get_times.sh'
