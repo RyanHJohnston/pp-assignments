@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
+    
     n = MATRIX_SIZE;
     bandSize = n / size;
 
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
         float *fullB = (float *)malloc(n * n * sizeof(float));
         generateMatrix(fullA, n);
         generateMatrix(fullB, n);
+        
 
         // Distribute A and B^T
         for (i = 0; i < size; ++i) {

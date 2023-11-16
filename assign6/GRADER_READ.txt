@@ -1,0 +1,12 @@
+I only did the first section of the homework, so 25 points at most.
+To compile:
+
+make all
+
+To run:
+
+make run
+
+To remove .o files:
+
+make clean
