@@ -14,8 +14,9 @@ void generateMatrix(float *matrix, int n) {
 
 void printMatrix(float *matrix, int n) {
     int i;
+    int j;
     for (i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
+        for (j = 0; j < n; j++) {
             printf("%.2f ", matrix[i * n + j]);
         }
         printf("\n");
@@ -25,6 +26,9 @@ void printMatrix(float *matrix, int n) {
 int main(int argc, char **argv) {
     int i;
     int rank, size, n, bandSize;
+    int step;
+    int k;
+    int j;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -51,14 +55,14 @@ int main(int argc, char **argv) {
                 // Copy directly for P0
                 memcpy(A, fullA, bandSize * n * sizeof(float));
                 // Transpose and copy B
-                for (int j = 0; j < bandSize; ++j)
-                    for (int k = 0; k < n; ++k)
+                for (j = 0; j < bandSize; ++j)
+                    for (k = 0; k < n; ++k)
                         B[j * n + k] = fullB[k * n + j];
             } else { // Send to other processes
                 MPI_Send(fullA + i * bandSize * n, bandSize * n, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
                 // Send transposed B
-                for (int j = 0; j < bandSize; ++j)
-                    for (int k = 0; k < n; ++k)
+                for (j = 0; j < bandSize; ++j)
+                    for (k = 0; k < n; ++k)
                         tempB[j * n + k] = fullB[k * n + (i * bandSize + j)];
                 MPI_Send(tempB, bandSize * n, MPI_FLOAT, i, 1, MPI_COMM_WORLD);
             }
@@ -72,12 +76,12 @@ int main(int argc, char **argv) {
     }
 
     // Perform computation and communication
-    for (int step = 0; step < size; ++step) {
+    for (step = 0; step < size; ++step) {
         // Compute a part of C
         for (i = 0; i < bandSize; ++i) {
-            for (int j = 0; j < bandSize; ++j) {
+            for (j = 0; j < bandSize; ++j) {
                 C[i * n + (bandSize * ((rank + step) % size) + j)] = 0;
-                for (int k = 0; k < n; ++k) {
+                for (k = 0; k < n; ++k) {
                     C[i * n + (bandSize * ((rank + step) % size) + j)] += A[i * n + k] * B[j * n + k];
                 }
             }
